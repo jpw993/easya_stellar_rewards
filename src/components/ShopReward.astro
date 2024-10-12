@@ -1,0 +1,54 @@
+<br/>
+<button data-increment aria-controls="current-value">Purchase Coffee: 200 XLM</button>
+
+<script>
+    import {kit, loadedPublicKey} from "../stellar-wallets-kit";
+    import shop_reward from "../contracts/shop_reward_contract";
+
+    const button = document.querySelector("[data-increment]");
+
+    button.addEventListener("click", async () => {
+        const publicKey = loadedPublicKey();
+
+        if (!publicKey) {
+            alert("Please connect your wallet first");
+            return;
+        } else {
+            shop_reward.options.publicKey = publicKey;
+        }
+
+        button.disabled = true;
+        button.classList.add("loading");
+
+        const sender: string = publicKey; // Replace with actual sender address
+        const product = "coffee"; // Replace with actual product address
+        const amount = BigInt(200); // Replace with actual amount, ensure it's in i128 format
+
+        const options = {
+            timeoutInSeconds: 300, // Optional: specify timeout in seconds
+            simulate: true, // Optional: specify whether to simulate the transaction
+        };
+
+
+        const tx = await shop_reward.make_purchase({sender, product, amount}, options);
+
+        try {
+            await tx.signAndSend({
+                force: true,
+                signTransaction: async (xdr) => {
+                    const {signedTxXdr} = await kit.signTransaction(xdr);
+                    return signedTxXdr;
+                },
+            });
+
+            // Only use `innerHTML` with contract values you trust!
+            // Blindly using values from an untrusted contract opens your users to script injection attacks!
+            // currentValue.innerHTML = result.toString();
+        } catch (e) {
+            console.error(e);
+        }
+
+        button.disabled = false;
+        button.classList.remove("loading");
+    });
+</script>
