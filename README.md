@@ -16,8 +16,12 @@ https://www.canva.com/design/DAGTX6cd_b0/KWO1qnVeOJ5LEDFgDa-ETQ/view
 https://www.youtube.com/watch?v=ZAXk0aVcPWs
 
 
+# Code Repo Walkthrough 
+https://www.youtube.com/watch?v=Z2bUrpGl_n0
+
+
 # Shop Payment Wallet Connect UI
-https://dfd6eb65.rewards-47h.pages.dev
+https://a5321f7d.rewards-47h.pages.dev
 
 
 # Smart Contract on TestNet
