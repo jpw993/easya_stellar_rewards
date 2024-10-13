@@ -1,7 +1,7 @@
 #![no_std]
 use soroban_sdk::{contract, contractimpl, contracttype, symbol_short, Address, Env, Symbol};
 
-use crate::balance::{read_balance, receive_balance};
+use crate::balance::{read_balance, receive_balance, spend_balance};
 
 use soroban_token_sdk::TokenUtils;
 
@@ -102,6 +102,23 @@ impl ShopReward {
         if loyalty_tokens > 0 {
             ShopReward::mint_loyalty_tokens(env.clone(), sender.clone(), loyalty_tokens);
         }
+    }
+
+    pub fn make_purchase_with_points(env: Env, sender: Address, product: Symbol, amount: i128) {
+        // Ensure the amount is non-negative
+        check_nonnegative_amount(amount);
+
+        // Get the owner of the contract
+        let owner = ShopReward::get_owner(&env);
+
+        // Authenticate the invoker (sender)
+        sender.require_auth();
+
+        spend_balance(&env, owner.clone(), amount);
+
+        // emit purchase Event
+        let topics = (symbol_short!("purchased"), product, amount);
+        env.events().publish(topics, amount);
     }
 }
 

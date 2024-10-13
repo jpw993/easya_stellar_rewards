@@ -26,7 +26,7 @@ pub fn receive_balance(e: &Env, addr: Address, amount: i128) {
     write_balance(e, addr, balance + amount);
 }
 
-pub fn _spend_balance(e: &Env, addr: Address, amount: i128) {
+pub fn spend_balance(e: &Env, addr: Address, amount: i128) {
     let balance = read_balance(e, addr.clone());
     if balance < amount {
         panic!("insufficient balance");
